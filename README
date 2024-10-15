@@ -1,1 +1,6 @@
-Berikut adalah tata cara menjalankan program
+Berikut adalah tata cara menjalankan program:
+1. Pada terminal, pastikan directory sudah sesuai dengan lokasi file "client.py" dan "server.py"
+2. Jalankan command:   python3 ./server.py
+3. Jika menggunakan 1 device, pada terminal baru dengan directory yang sama, jalankan command: python3 ./client.py
+4. Jika menggunakan device lain, buka terminal dan jalankan command: python ./client.py
+5. Pastikan bahwa directory sudah sesuai sebelum menjalankan command
