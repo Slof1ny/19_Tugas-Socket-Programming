@@ -4,29 +4,27 @@ import queue
 import random
 import string
 
-# Function to receive data from clients
 def RecvData(sock, recvPackets):
     while True:
         data, addr = sock.recvfrom(1024)
         recvPackets.put((data, addr))
-
 # Function to generate a random 6-character alphanumeric password
 def generate_password():
     characters = string.ascii_letters + string.digits
     return ''.join(random.choice(characters) for _ in range(6))
 
-# Function to run the server
 def RunServer():
     host = '127.0.0.1'
     port = 9999
     password = generate_password()  # Generate 6-character password
     print('Server hosting on IP -> ' + str(host))
-    print('Server password -> ' + password)
+    print('Server running on port -> ' + str(port))
+    print('Server password -> ' + str(password))
     
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.bind((host, port))
     
-    clients = set()
+    clients = {}  # Dictionary untuk menyimpan alamat klien dan status autentikasi
     recvPackets = queue.Queue()
 
     print('Server Running...')
@@ -38,26 +36,30 @@ def RunServer():
             data, addr = recvPackets.get()
             data = data.decode('utf-8')
 
-            # Handle client connection verification with password
             if addr not in clients:
+                # Proses autentikasi
                 if data == password:
-                    clients.add(addr)
-                    s.sendto("Password accepted. Welcome to the chatroom.".encode('utf-8'), addr)
-                    print(f"Client {addr} connected.")
+                    s.sendto("Password accepted. Please enter your name.".encode('utf-8'), addr)
+                    clients[addr] = {'authenticated': False, 'name': None}
                 else:
-                    s.sendto("Incorrect password. Connection refused.".encode('utf-8'), addr)
-                    print(f"Client {addr} failed to connect due to wrong password.")
-                    continue
+                    s.sendto("Invalid password. Try again.".encode('utf-8'), addr)
+            elif not clients[addr]['authenticated']:
+                # Proses penerimaan nama
+                clients[addr]['name'] = data
+                clients[addr]['authenticated'] = True
+                s.sendto(f"Welcome {data}! You can start chatting.".encode('utf-8'), addr)
+                print(f"New client {addr} joined as {data}")
+            else:
+                # Proses chat biasa
+                if data == 'qqq':
+                    print(f"Client {clients[addr]['name']} disconnected")
+                    del clients[addr]
+                else:
+                    print(f"{data}")
+                    for client in clients:
+                        if client != addr and clients[client]['authenticated']:
+                            s.sendto(f"{data}".encode('utf-8'), client)
 
-            # Handle normal client communication
-            if data.endswith('qqq'):
-                clients.remove(addr)
-                continue
-            
-            print(str(addr) + ' -> ' + data)
-            for c in clients:
-                if c != addr:
-                    s.sendto(data.encode('utf-8'), c)
     s.close()
 
 if __name__ == '__main__':

@@ -17,7 +17,6 @@ def RunClient():
     # Collect the necessary inputs from the user
     server_ip = input("Server IP (use '127.0.0.1' for localhost): ")
     server_port = int(input("Server Port: "))
-    name = input("Nama: ")
     password = input("Password: ")
 
     server = (server_ip, server_port)
@@ -36,6 +35,9 @@ def RunClient():
         s.close()
         return  # Exit if password is wrong
 
+    # Ask for the client's name after password verification
+    name = input("Nama: ")
+
     # Send the client's name to the server
     s.sendto(name.encode('utf-8'), server)
 
@@ -49,7 +51,7 @@ def RunClient():
             break
         elif data == '':
             continue
-        data = '[' + name + ']' + ' -> ' + data
+        data = name + ': ' + data
         s.sendto(data.encode('utf-8'), server)
 
     # Close the socket and exit
