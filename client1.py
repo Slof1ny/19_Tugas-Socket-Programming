@@ -3,7 +3,6 @@ import threading
 import random
 import os
 
-# Function to receive data from the server
 def ReceiveData(sock):
     while True:
         try:
@@ -12,52 +11,62 @@ def ReceiveData(sock):
         except:
             pass
 
-# Function to run the client
+def Authenticate(sock, server):
+    while True:
+        password = input("Password: ")
+        sock.sendto(password.encode('utf-8'), server)
+        response, _ = sock.recvfrom(1024)
+        response = response.decode('utf-8')
+        print(response)
+        if "Password accepted" in response:
+            break
+        elif "Password incorrect" in response:
+            print("Incorrect password. Please try again.")
+        else:
+            print("Unexpected response from server. Exiting.")
+            return False
+    
+    while True:
+        name = input("Name: ")
+        sock.sendto(name.encode('utf-8'), server)
+        response, _ = sock.recvfrom(1024)
+        response = response.decode('utf-8')
+        print(response)
+        if "Welcome" in response:
+            return name
+        elif "Name is already taken" in response:
+            print("This name is already taken. Please choose a different name.")
+        else:
+            print("Unexpected response from server. Exiting.")
+            return False
+
 def RunClient():
-    # Collect the necessary inputs from the user
     server_ip = input("Server IP (use '127.0.0.1' for localhost): ")
     server_port = int(input("Server Port: "))
-    password = input("Password: ")
-
     server = (server_ip, server_port)
+    
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.bind(('127.0.0.1', random.randint(8000, 9000)))
+    s.bind(('', 0))  # Bind to a random available port
 
-    # Ask for password and wait for server's response
-    s.sendto(password.encode('utf-8'), server)
-    response, addr = s.recvfrom(1024)
-    response = response.decode('utf-8')
-    print(response)
-
-    # Check if the password was accepted
-    if "Password accepted" not in response:
-        print("Exiting due to incorrect password.")
+    name = Authenticate(s, server)
+    if not name:
         s.close()
-        return  # Exit if password is wrong
+        return
 
-    # Ask for the client's name after password verification
-    name = input("Nama: ")
+    threading.Thread(target=ReceiveData, args=(s,), daemon=True).start()
 
-    # Send the client's name to the server
-    s.sendto(name.encode('utf-8'), server)
-
-    # Start a thread to receive data from the server
-    threading.Thread(target=ReceiveData, args=(s,)).start()
-
-    # Main loop to send messages
     while True:
         data = input()
-        if data == 'qqq':
+        if data.lower() == 'qqq':
             break
         elif data == '':
             continue
-        data = name + ': ' + data
+        data = f"{data}"
         s.sendto(data.encode('utf-8'), server)
 
-    # Close the socket and exit
-    s.sendto(data.encode('utf-8'), server)
+    s.sendto('qqq'.encode('utf-8'), server)
     s.close()
-    os._exit(1)
+    print("Disconnected from server.")
 
 if __name__ == '__main__':
     RunClient()
