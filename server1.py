@@ -45,10 +45,13 @@ def RunServer():
                     s.sendto("Invalid password. Try again.".encode('utf-8'), addr)
             elif not clients[addr]['authenticated']:
                 # Proses penerimaan nama
-                clients[addr]['name'] = data
-                clients[addr]['authenticated'] = True
-                s.sendto(f"Welcome {data}! You can start chatting.".encode('utf-8'), addr)
-                print(f"New client {addr} joined as {data}")
+                if data in [client_info['name'] for client_info in clients.values() if client_info['name'] is not None]:
+                    s.sendto("Name is already taken. Please choose a different name.".encode('utf-8'), addr)
+                else:
+                    clients[addr]['name'] = data
+                    clients[addr]['authenticated'] = True
+                    s.sendto(f"Welcome {data}! You can start chatting.".encode('utf-8'), addr)
+                    print(f"New client {addr} joined as {data}")
             else:
                 # Proses chat biasa
                 if data == 'qqq':
