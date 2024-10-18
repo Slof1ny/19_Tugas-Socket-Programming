@@ -1,0 +1,14 @@
+[2024-10-18 23:06:40] Server started
+[2024-10-18 23:06:40] Server IP: 127.0.0.1, Port: 9999
+[2024-10-18 23:07:32] Client ('127.0.0.1', 57149) authenticated successfully
+[2024-10-18 23:07:35] New client ('127.0.0.1', 57149) joined as hakim
+[2024-10-18 23:07:43] hakim: halo
+[2024-10-18 23:07:45] hakim: tes
+[2024-10-18 23:07:46] hakim: coba
+[2024-10-18 23:08:09] Client ('127.0.0.1', 61133) authenticated successfully
+[2024-10-18 23:08:11] New client ('127.0.0.1', 61133) joined as huga
+[2024-10-18 23:08:14] huga: coba juga
+[2024-10-18 23:08:18] huga: tester
+[2024-10-18 23:08:23] hakim: tester juga
+[2024-10-18 23:09:15] Server started
+[2024-10-18 23:09:15] Server IP: 127.0.0.1, Port: 9999

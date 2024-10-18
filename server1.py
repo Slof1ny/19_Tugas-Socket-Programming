@@ -2,6 +2,16 @@ import socket
 import threading
 import random
 import string
+import os
+from datetime import datetime
+
+def write_log(message):
+    log_file = "log_server.txt"
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    log_message = f"[{timestamp}] {message}\n"
+    
+    with open(log_file, "a") as file:
+        file.write(log_message)
 
 def generate_password(length=6):
     return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
@@ -22,8 +32,10 @@ def handle_client(data, addr, clients, password):
         if data.decode('utf-8') == password:
             server_socket.sendto("Password accepted. Please enter your name.".encode('utf-8'), addr)
             clients[addr]['authenticated'] = True
+            write_log(f"Client {addr} authenticated successfully")
         else:
             server_socket.sendto("Password incorrect. Please try again.".encode('utf-8'), addr)
+            write_log(f"Failed authentication attempt from {addr}")
     elif clients[addr]['name'] is None:
         name = data.decode('utf-8')
         if any(client['name'] == name for client in clients.values()):
@@ -34,6 +46,7 @@ def handle_client(data, addr, clients, password):
             server_socket.sendto(welcome_message.encode('utf-8'), addr)
             broadcast(f"{name} has joined the chat!", addr, clients)
             print(f"New client {addr} joined as {name}")
+            write_log(f"New client {addr} joined as {name}")
     else:
         message = data.decode('utf-8')
         if message.lower() == 'qqq':
@@ -43,6 +56,7 @@ def handle_client(data, addr, clients, password):
         else:
             broadcast(f"{clients[addr]['name']}: {message}", addr, clients)
             print(f"{clients[addr]['name']}: {message}")
+            write_log(f"{clients[addr]['name']}: {message}")
 
 def start_server():
     global server_socket
@@ -57,6 +71,8 @@ def start_server():
     print('Server hosting on IP -> ' + str(host))
     print('Server running on port -> ' + str(port))
     print('Server password -> ' + str(password))
+    write_log("Server started")
+    write_log(f"Server IP: {host}, Port: {port}")
 
     while True:
         try:
