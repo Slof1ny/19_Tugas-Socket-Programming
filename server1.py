@@ -2,8 +2,27 @@ import socket
 import threading
 import random
 import string
-import os
+import csv
 from datetime import datetime
+
+def load_users():
+    users = {}
+    try:
+        with open('users.csv', 'r') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                users[row[0]] = row[1]
+    except FileNotFoundError:
+        pass
+    return users
+
+def save_user(name, id):
+    with open('users.csv', 'a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([name, id])
+
+def generate_id():
+    return str(random.randint(1000, 9999))
 
 def write_log(message):
     log_file = "log_server.txt"
@@ -16,70 +35,100 @@ def write_log(message):
 def generate_password(length=6):
     return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 
-def broadcast(message, sender_addr, clients):
-    for addr, client in clients.items():
-        if addr != sender_addr and client['authenticated']:
-            try:
-                server_socket.sendto(message.encode('utf-8'), addr)
-            except:
-                pass
+def broadcast(message, sender_addr=None):
+    for client in clients:
+        if client != sender_addr:
+            s.sendto(message.encode('utf-8'), client)
 
-def handle_client(data, addr, clients, password):
-    if addr not in clients:
-        clients[addr] = {'authenticated': False, 'name': None}
-
-    if not clients[addr]['authenticated']:
-        if data.decode('utf-8') == password:
-            server_socket.sendto("Password accepted. Please enter your name.".encode('utf-8'), addr)
-            clients[addr]['authenticated'] = True
-            write_log(f"Client {addr} authenticated successfully")
-        else:
-            server_socket.sendto("Password incorrect. Please try again.".encode('utf-8'), addr)
-            write_log(f"Failed authentication attempt from {addr}")
-    elif clients[addr]['name'] is None:
-        name = data.decode('utf-8')
-        if any(client['name'] == name for client in clients.values()):
-            server_socket.sendto("Name is already taken. Please choose a different name.".encode('utf-8'), addr)
-        else:
-            clients[addr]['name'] = name
-            welcome_message = f"Welcome {name}! You can start chatting."
-            server_socket.sendto(welcome_message.encode('utf-8'), addr)
-            broadcast(f"{name} has joined the chat!", addr, clients)
-            print(f"New client {addr} joined as {name}")
-            write_log(f"New client {addr} joined as {name}")
-    else:
-        message = data.decode('utf-8')
-        if message.lower() == 'qqq':
-            broadcast(f"{clients[addr]['name']} has left the chat.", addr, clients)
-            print(f"Client {clients[addr]['name']} disconnected")
-            del clients[addr]
-        else:
-            broadcast(f"{clients[addr]['name']}: {message}", addr, clients)
-            print(f"{clients[addr]['name']}: {message}")
-            write_log(f"{clients[addr]['name']}: {message}")
-
-def start_server():
-    global server_socket
+def RunServer():
     host = '127.0.0.1'
     port = 9999
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    server_socket.bind((host, port))
-
+    
+    global s
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.bind((host, port))
+    
+    global clients
     clients = {}
+    users = load_users()
+    
     password = generate_password()
-    print(f"Server started. Password is: {password}")
-    print('Server hosting on IP -> ' + str(host))
-    print('Server running on port -> ' + str(port))
-    print('Server password -> ' + str(password))
-    write_log("Server started")
-    write_log(f"Server IP: {host}, Port: {port}")
-
+    print(f"Generated Password: {password}")
+    write_log(f"Server started. Password: {password}")
+    print("Server Started")
+    
     while True:
         try:
-            data, addr = server_socket.recvfrom(1024)
-            threading.Thread(target=handle_client, args=(data, addr, clients, password)).start()
-        except:
-            pass
+            data, addr = s.recvfrom(1024)
+            data = data.decode('utf-8')
+            
+            if addr not in clients:
+                if data == password:
+                    s.sendto("Password accepted. Enter 'register' or 'login':".encode('utf-8'), addr)
+                    clients[addr] = None  # Menandai bahwa klien telah melewati tahap password
+                else:
+                    s.sendto("Incorrect password. Try again.".encode('utf-8'), addr)
+            elif addr in clients and clients[addr] is None:
+                if data.lower() == 'register':
+                    s.sendto("Enter your name:".encode('utf-8'), addr)
+                    clients[addr] = 'registering'
+                elif data.lower() == 'login':
+                    s.sendto("Enter your name:".encode('utf-8'), addr)
+                    clients[addr] = 'logging_in'
+                else:
+                    s.sendto("Invalid command. Use 'register' or 'login'.".encode('utf-8'), addr)
+            elif addr in clients and clients[addr] == 'registering':
+                name = data
+                if name in users:
+                    s.sendto("Name already exists. Try logging in.".encode('utf-8'), addr)
+                    clients[addr] = None
+                else:
+                    id = generate_id()
+                    users[name] = id
+                    save_user(name, id)
+                    clients[addr] = name
+                    s.sendto(f"Registered. Your ID is {id}. Welcome {name}".encode('utf-8'), addr)
+                    write_log(f"{name} joined the chat")
+                    print(f"{name} joined the chat")
+                    broadcast(f"{name} joined the chat.")
+            elif addr in clients and clients[addr] == 'logging_in':
+                name = data
+                if name not in users:
+                    s.sendto("Name not found. Try registering.".encode('utf-8'), addr)
+                    clients[addr] = None
+                else:
+                    s.sendto("Enter your ID:".encode('utf-8'), addr)
+                    clients[addr] = ('verifying', name)
+            elif addr in clients and isinstance(clients[addr], tuple) and clients[addr][0] == 'verifying':
+                _, name = clients[addr]
+                id = data
+                if users[name] == id:
+                    clients[addr] = name
+                    s.sendto(f"Login successful. Welcome back, {name}!".encode('utf-8'), addr)
+                    write_log(f"{name} joined the chat")
+                    print(f"{name} joined the chat")
+                    broadcast(f"{name} joined the chat.")
+                else:
+                    s.sendto("Incorrect ID. Try again.".encode('utf-8'), addr)
+                    clients[addr] = None
+            else:
+                name = clients[addr]
+                message = f"{name}: {data}"
+                broadcast(message, addr)
+                write_log(message)
+                print(message)
+                
+                if data.lower() == 'qqq':
+                    write_log(f"{name} left the chat")
+                    print(f"{name} left the chat")
+                    broadcast(f"{name} left the chat")
+                    del clients[addr]
+
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            write_log(f"Error: {e}")
+            print(e)
+            print("Server stopped")
 
 if __name__ == '__main__':
-    start_server()
+    RunServer()

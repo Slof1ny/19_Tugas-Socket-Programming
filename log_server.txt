@@ -12,3 +12,19 @@
 [2024-10-18 23:08:23] hakim: tester juga
 [2024-10-18 23:09:15] Server started
 [2024-10-18 23:09:15] Server IP: 127.0.0.1, Port: 9999
+[2024-10-20 22:58:08] Server started. Password: MIZJXp
+[2024-10-20 22:58:49] Hakim joined the chat
+[2024-10-20 22:58:50] Error: broadcast() missing 2 required positional arguments: 'sender_addr' and 'clients'
+[2024-10-20 22:58:57] Error: broadcast() missing 1 required positional argument: 'clients'
+[2024-10-20 22:59:55] huga joined the chat
+[2024-10-20 22:59:55] Error: broadcast() missing 2 required positional arguments: 'sender_addr' and 'clients'
+[2024-10-20 22:59:58] Error: broadcast() missing 1 required positional argument: 'clients'
+[2024-10-20 23:01:47] Error: broadcast() missing 1 required positional argument: 'clients'
+[2024-10-20 23:01:50] Error: broadcast() missing 1 required positional argument: 'clients'
+[2024-10-20 23:03:04] Server started. Password: 8VkHsf
+[2024-10-20 23:03:37] Hakim joined the chat
+[2024-10-20 23:03:59] Hakim: halo
+[2024-10-20 23:04:32] huga joined the chat
+[2024-10-20 23:04:36] huga: p
+[2024-10-20 23:04:38] huga: tester
+[2024-10-20 23:04:51] Hakim: apa coba

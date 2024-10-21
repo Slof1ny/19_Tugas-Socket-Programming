@@ -1,7 +1,5 @@
 import socket
 import threading
-import random
-import os
 
 def ReceiveData(sock):
     while True:
@@ -27,15 +25,30 @@ def Authenticate(sock, server):
             return False
     
     while True:
-        name = input("Name: ")
-        sock.sendto(name.encode('utf-8'), server)
+        action = input("Enter 'register' or 'login': ").lower()
+        sock.sendto(action.encode('utf-8'), server)
         response, _ = sock.recvfrom(1024)
         response = response.decode('utf-8')
         print(response)
-        if "Welcome" in response:
-            return name
-        elif "Name is already taken" in response:
-            print("This name is already taken. Please choose a different name.")
+
+        if "Enter your name" in response:
+            name = input("Name: ")
+            sock.sendto(name.encode('utf-8'), server)
+            response, _ = sock.recvfrom(1024)
+            response = response.decode('utf-8')
+            print(response)
+
+            if "Enter your ID" in response:
+                id = input("ID: ")
+                sock.sendto(id.encode('utf-8'), server)
+                response, _ = sock.recvfrom(1024)
+                response = response.decode('utf-8')
+                print(response)
+
+            if "Welcome" in response or "successful" in response:
+                return name
+            else:
+                print("Authentication failed. Please try again.")
         else:
             print("Unexpected response from server. Exiting.")
             return False
@@ -52,7 +65,7 @@ def RunClient():
     if not name:
         s.close()
         return
-
+    print(f"You are now in the chat as {name}. Type 'qqq' to quit.")
     threading.Thread(target=ReceiveData, args=(s,), daemon=True).start()
 
     while True:
