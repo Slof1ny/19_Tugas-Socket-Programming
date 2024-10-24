@@ -4,6 +4,8 @@ import random
 import string
 import csv
 from datetime import datetime
+import rsa_cipher
+from rsa_cipher import generate_rsa_keypair, decrypt, encrypt
 
 def load_users():
     users = {}
@@ -38,7 +40,9 @@ def generate_password(length=6):
 def broadcast(message, sender_addr=None):
     for client in clients:
         if client != sender_addr:
-            s.sendto(message.encode('utf-8'), client)
+            encrypted_message = rsa_cipher.encrypt(public_key, message)
+            cipher_text_str = " ".join(map(str, encrypted_message))
+            s.sendto(str(cipher_text_str).encode('utf-8'), client)
 
 def RunServer():
     host = '127.0.0.1'
@@ -51,7 +55,10 @@ def RunServer():
     global clients
     clients = {}
     users = load_users()
-    
+
+    global public_key, private_key
+    public_key, private_key = generate_rsa_keypair(97, 79)
+
     password = generate_password()
     print(f"Generated Password: {password}")
     write_log(f"Server started. Password: {password}")
@@ -64,7 +71,7 @@ def RunServer():
             
             if addr not in clients:
                 if data == password:
-                    s.sendto("Password accepted. Enter 'register' or 'login':".encode('utf-8'), addr)
+                    s.sendto(f"({public_key[0]},{public_key[1]})".encode('utf-8'), addr)
                     clients[addr] = None  # Menandai bahwa klien telah melewati tahap password
                 else:
                     s.sendto("Incorrect password. Try again.".encode('utf-8'), addr)
@@ -113,12 +120,15 @@ def RunServer():
                     clients[addr] = None
             else:
                 name = clients[addr]
-                message = f"{name}: {data}"
+                encrypted_message_str = data.replace('[', '').replace(']', '').replace(',', '')
+                encrypted_message = list(map(int, encrypted_message_str.split()))
+                decrypted_message = decrypt(private_key, encrypted_message)
+                message = f"{name}: {decrypted_message}"
                 broadcast(message, addr)
                 write_log(message)
                 print(message)
                 
-                if data.lower() == 'qqq':
+                if decrypted_message.lower() == 'qqq':
                     write_log(f"{name} left the chat")
                     print(f"{name} left the chat")
                     broadcast(f"{name} left the chat")

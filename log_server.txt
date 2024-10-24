@@ -28,3 +28,75 @@
 [2024-10-20 23:04:36] huga: p
 [2024-10-20 23:04:38] huga: tester
 [2024-10-20 23:04:51] Hakim: apa coba
+[2024-10-21 14:01:30] Server started. Password: z2iA6d
+[2024-10-21 17:36:04] Server started. Password: ZGeJBP
+[2024-10-21 17:37:48] tama joined the chat
+[2024-10-21 17:37:48] Error: too many values to unpack (expected 2)
+[2024-10-21 17:39:56] Server started. Password: M2xhxE
+[2024-10-21 17:40:34] tama joined the chat
+[2024-10-21 17:40:34] Error: too many values to unpack (expected 2)
+[2024-10-21 17:41:53] Server started. Password: zMRrGr
+[2024-10-21 17:42:24] tama joined the chat
+[2024-10-21 17:42:24] Error: too many values to unpack (expected 2)
+[2024-10-21 17:43:11] mudzaki joined the chat
+[2024-10-21 17:43:11] Error: too many values to unpack (expected 2)
+[2024-10-21 17:47:18] Server started. Password: 1g8IIH
+[2024-10-21 17:47:48] huga joined the chat
+[2024-10-21 17:47:48] Error: too many values to unpack (expected 2)
+[2024-10-21 17:51:00] Server started. Password: q7NC5x
+[2024-10-21 17:51:39] huga joined the chat
+[2024-10-21 17:51:39] Error: too many values to unpack (expected 2)
+[2024-10-21 17:55:02] Server started. Password: xuGe7M
+[2024-10-21 17:55:28] huga joined the chat
+[2024-10-21 17:55:28] Error: too many values to unpack (expected 2)
+[2024-10-21 17:56:32] Server started. Password: GWR3RH
+[2024-10-21 17:56:53] huga joined the chat
+[2024-10-21 17:56:53] Error: too many values to unpack (expected 2)
+[2024-10-21 17:59:52] Server started. Password: vfAAyJ
+[2024-10-21 18:00:26] huga joined the chat
+[2024-10-21 18:00:26] Error: too many values to unpack (expected 2)
+[2024-10-21 18:00:28] Error: invalid literal for int() with base 10: '[4986, 6305, 2034, 1945]'
+[2024-10-21 18:08:41] Server started. Password: lxRRDo
+[2024-10-21 18:09:19] huga joined the chat
+[2024-10-21 18:09:19] Error: too many values to unpack (expected 2)
+[2024-10-21 18:09:21] Error: invalid literal for int() with base 10: '[4986, 6305, 2034, 1945]'
+[2024-10-21 18:09:33] Error: invalid literal for int() with base 10: '[6033, 6736, 309]'
+[2024-10-21 18:12:26] Server started. Password: 85nBoE
+[2024-10-21 18:12:55] huga joined the chat
+[2024-10-21 18:13:02] Error: invalid literal for int() with base 10: '[4986, 6736, 2034, 1945]'
+[2024-10-21 18:13:27] tama joined the chat
+[2024-10-21 18:13:31] Error: invalid literal for int() with base 10: '[4986, 6305, 7477, 7477, 7477]'
+[2024-10-21 18:37:51] Server started. Password: qcqD8b
+[2024-10-21 18:38:33] huga joined the chat
+[2024-10-21 18:44:14] huga joined the chat
+[2024-10-21 18:50:55] huga joined the chat
+[2024-10-21 18:51:54] huga joined the chat
+[2024-10-21 19:11:44] Server started. Password: gsI2b7
+[2024-10-21 19:18:07] Server started. Password: K0jkUp
+[2024-10-21 19:19:23] huga joined the chat
+[2024-10-24 10:46:40] Server started. Password: ns3znR
+[2024-10-24 10:47:19] huga joined the chat
+[2024-10-24 10:48:47] Server started. Password: R08sVH
+[2024-10-24 10:53:50] Server started. Password: ALGOSy
+[2024-10-24 11:05:17] Server started. Password: goVIpr
+[2024-10-24 11:05:43] gudde joined the chat
+[2024-10-24 11:23:40] Server started. Password: 60qkCx
+[2024-10-24 11:24:49] huga joined the chat
+[2024-10-24 11:27:20] Server started. Password: gd2sVi
+[2024-10-24 11:28:27] Server started. Password: yYSjXf
+[2024-10-24 11:29:23] Server started. Password: khoNnv
+[2024-10-24 11:30:08] huga joined the chat
+[2024-10-24 11:33:46] Server started. Password: WYzceD
+[2024-10-24 11:39:44] Server started. Password: 63y5DU
+[2024-10-24 11:40:12] huga joined the chat
+[2024-10-24 11:48:40] Server started. Password: r6TPv4
+[2024-10-24 11:48:59] huga joined the chat
+[2024-10-24 11:49:04] Error: cannot access local variable 'message' where it is not associated with a value
+[2024-10-24 11:52:19] Server started. Password: YnX2uM
+[2024-10-24 11:52:43] huga joined the chat
+[2024-10-24 11:52:45] Error: invalid literal for int() with base 10: '[4986,'
+[2024-10-24 11:52:54] Error: invalid literal for int() with base 10: '[4986,'
+[2024-10-24 11:54:19] Server started. Password: KHC7io
+[2024-10-24 11:54:36] huga joined the chat
+[2024-10-24 11:54:38] huga: hai
+[2024-10-24 11:54:40] huga: haloo

@@ -13,7 +13,7 @@ def is_prime(n: int) -> bool:
 
 def fpb(a: int, b: int) -> int:
     while b != 0:
-        a, b = b, a & b
+        a, b = b, a % b
     return a
 
 def mod_inverse(e: int, phi: int) -> int:
@@ -21,7 +21,7 @@ def mod_inverse(e: int, phi: int) -> int:
         if a == 0:
             return b, 0, 1
         fpb, x1, y1 = extended_fpb(b % a, a)
-        x = y1 - (b // a) * x1y = x1
+        x = y1 - (b // a) * x1
         y = x1
         return fpb, x, y
     fpb, x, y = extended_fpb(e, phi)
@@ -60,7 +60,7 @@ def int_to_string(message_int: int) -> str:
 def encrypt(public_key: Tuple[int, int], plaintext: str) -> list:
     e, n = public_key
     chunk_size = (n.bit_length() - 1) // 8
-    chunks = [plaintext[i:i+chunk_size] for i in range(0, len(plaintext, chunk_size))]
+    chunks = [plaintext[i:i + chunk_size] for i in range(0, len(plaintext), chunk_size)]
     cipher_text = [pow(string_to_int(chunk), e, n) for chunk in chunks]
     return cipher_text
 
@@ -68,5 +68,3 @@ def decrypt(private_key: Tuple[int, int], cipher_text: list) -> str:
     d, n = private_key
     decrypted_chunks = [int_to_string(pow(chunk, d, n)) for chunk in cipher_text]
     return ''.join(decrypted_chunks)
-
-
