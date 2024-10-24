@@ -34,6 +34,14 @@ def write_log(message):
     with open(log_file, "a") as file:
         file.write(log_message)
 
+def write_encrypted_log(encrypted_message):
+    log_file = "log_encrypted.txt"
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    log_message = f"[{timestamp}] {encrypted_message}\n"
+    
+    with open(log_file, "a") as file:
+        file.write(log_message)
+
 def generate_password(length=6):
     return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 
@@ -42,6 +50,7 @@ def broadcast(message, sender_addr=None):
         if client != sender_addr:
             encrypted_message = rsa_cipher.encrypt(public_key, message)
             cipher_text_str = " ".join(map(str, encrypted_message))
+            write_encrypted_log(cipher_text_str)
             s.sendto(str(cipher_text_str).encode('utf-8'), client)
 
 def RunServer():
@@ -121,6 +130,7 @@ def RunServer():
             else:
                 name = clients[addr]
                 encrypted_message_str = data.replace('[', '').replace(']', '').replace(',', '')
+                write_encrypted_log(encrypted_message_str)
                 encrypted_message = list(map(int, encrypted_message_str.split()))
                 decrypted_message = decrypt(private_key, encrypted_message)
                 message = f"{name}: {decrypted_message}"
