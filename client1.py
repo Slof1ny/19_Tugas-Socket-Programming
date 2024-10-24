@@ -3,19 +3,23 @@ import threading
 import rsa_cipher
 from rsa_cipher import encrypt, decrypt
 
-def ReceiveData(sock, private_key):
+def ReceiveData(sock: socket.socket, private_key: tuple) -> None:
     while True:
         try:
             data, addr = sock.recvfrom(1024)
-            encrypted_message_str = data.decode('utf-8')
-            encrypted_message = list(map(int, encrypted_message_str.split()))  # Convert back to list of integers
-            decrypted_message = decrypt(private_key, encrypted_message)
-            print(decrypted_message)
+            data = data.decode()
+            if data.startswith('[') and data.endswith(']'):
+                encrypted_message_str = data.decode('utf-8')
+                encrypted_message = list(map(int, encrypted_message_str.split()))  # Convert back to list of integers
+                decrypted_message = decrypt(private_key, encrypted_message)
+                print(decrypted_message)
+            else:
+                print(data)
         except Exception as e:
             print(f"Error receiving data: {e}")
             break
 
-def Authenticate(sock, server):
+def Authenticate(sock: socket.socket, server: tuple) -> str:
     public_key = None
     while True:
         password = input("Password: ")
@@ -70,7 +74,7 @@ def Authenticate(sock, server):
             print("Unexpected response from server. Exiting.")
             return False
 
-def RunClient():
+def RunClient() -> None:
     server_ip = input("Server IP (use '127.0.0.1' for localhost): ")
     server_port = int(input("Server Port: "))
     server = (server_ip, server_port)

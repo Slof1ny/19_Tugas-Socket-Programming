@@ -7,7 +7,7 @@ from datetime import datetime
 import rsa_cipher
 from rsa_cipher import generate_rsa_keypair, decrypt, encrypt
 
-def load_users():
+def load_users() -> dict:
     users = {}
     try:
         with open('users.csv', 'r') as file:
@@ -18,15 +18,15 @@ def load_users():
         pass
     return users
 
-def save_user(name, id):
+def save_user(name: str, id: str) -> None:
     with open('users.csv', 'a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([name, id])
 
-def generate_id():
+def generate_id() -> str:
     return str(random.randint(1000, 9999))
 
-def write_log(message):
+def write_log(message: str) -> None:
     log_file = "log_server.txt"
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     log_message = f"[{timestamp}] {message}\n"
@@ -34,7 +34,7 @@ def write_log(message):
     with open(log_file, "a") as file:
         file.write(log_message)
 
-def write_encrypted_log(encrypted_message):
+def write_encrypted_log(encrypted_message: str) -> None:
     log_file = "log_encrypted.txt"
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     log_message = f"[{timestamp}] {encrypted_message}\n"
@@ -42,18 +42,19 @@ def write_encrypted_log(encrypted_message):
     with open(log_file, "a") as file:
         file.write(log_message)
 
-def generate_password(length=6):
+def generate_password(length: int = 6) -> str:
     return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 
-def broadcast(message, sender_addr=None):
+def broadcast(message: str, sender_addr: tuple = None) -> None:
     for client in clients:
         if client != sender_addr:
+            s.sendto(message.encode('utf-8'), client)
             encrypted_message = rsa_cipher.encrypt(public_key, message)
             cipher_text_str = " ".join(map(str, encrypted_message))
             write_encrypted_log(cipher_text_str)
-            s.sendto(str(cipher_text_str).encode('utf-8'), client)
+            
 
-def RunServer():
+def RunServer() -> None:
     host = '127.0.0.1'
     port = 9999
     

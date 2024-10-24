@@ -103,3 +103,23 @@
 [2024-10-24 12:00:56] Server started. Password: Q9SgV6
 [2024-10-24 12:01:19] huga joined the chat
 [2024-10-24 12:01:22] huga: halo semua!
+[2024-10-24 14:23:57] Server started. Password: JDkHSO
+[2024-10-24 14:24:29] huga joined the chat
+[2024-10-24 14:24:29] Error: cannot access local variable 'encrypted_message' where it is not associated with a value
+[2024-10-24 14:25:55] Server started. Password: vQPBhp
+[2024-10-24 14:26:18] huga joined the chat
+[2024-10-24 14:26:27] huga: haloo
+[2024-10-24 14:26:34] huga: lagi apa gusy
+[2024-10-24 14:27:11] tama joined the chat
+[2024-10-24 14:27:14] tama: haii
+[2024-10-24 14:27:19] huga: tes
+[2024-10-24 14:27:22] tama: uy
+[2024-10-24 14:30:20] mudzaki joined the chat
+[2024-10-24 14:30:24] mudzaki: hai
+[2024-10-24 14:30:30] mudzaki: hai hai haiii
+[2024-10-24 14:34:40] Server started. Password: YhAqj7
+[2024-10-24 14:35:07] huga joined the chat
+[2024-10-24 14:35:13] huga: tes123
+[2024-10-24 14:35:39] tama joined the chat
+[2024-10-24 14:35:44] tama: haii
+[2024-10-24 14:36:00] tama: halo huga
