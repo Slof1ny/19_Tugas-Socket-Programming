@@ -75,13 +75,41 @@ def Authenticate(sock: socket.socket, server: tuple) -> str:
             return False
 
 def RunClient() -> None:
-    server_ip = input("Server IP (use '127.0.0.1' for localhost): ")
-    server_port = int(input("Server Port: "))
-    server = (server_ip, server_port)
-    
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.bind(('', 0))  # Bind to a random available port
-
+    while True:
+        try:
+            server_ip = input("Server IP (use '127.0.0.1' for localhost): ")
+            server_port = input("Server Port: ")
+            
+            # Validasi input port
+            if not server_port.isdigit():
+                raise ValueError("Port harus berupa angka.")
+            server_port = int(server_port)
+            
+            server = (server_ip, server_port)
+            
+            # Membuat socket UDP
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            s.bind(('', 0))  # Bind ke port random
+            
+            # Mencoba koneksi ke server
+            s.settimeout(5)  # Set timeout untuk koneksi
+            s.sendto(b'test', server)
+            s.recvfrom(1024)
+            s.settimeout(None)  # Reset timeout
+            
+            print("Berhasil terhubung ke server.")
+            break  # Keluar dari loop jika koneksi berhasil
+        
+        except socket.gaierror:
+            print("Error: Alamat IP tidak valid. Silakan coba lagi.")
+        except ValueError as ve:
+            print(f"Error: {ve}")
+        except socket.timeout:
+            print("Error: Tidak dapat terhubung ke server. Pastikan alamat dan port benar.")
+        except Exception as e:
+            print(f"Terjadi kesalahan: {e}")
+        
+        print("Silakan coba lagi.\n")
     
     auth_response = Authenticate(s, server)
     if not auth_response:
