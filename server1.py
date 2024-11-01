@@ -8,6 +8,10 @@ import rsa_cipher
 from rsa_cipher import generate_rsa_keypair, decrypt, encrypt
 
 def load_users() -> dict:
+    """
+    Memuat data user dari file CSV sebagai dictionary
+    """
+
     users = {}
     try:
         with open('users.csv', 'r') as file:
@@ -19,14 +23,26 @@ def load_users() -> dict:
     return users
 
 def save_user(name: str, id: str) -> None:
+    """
+    Menyimpan data pengguna baru berupa nama dan ID ke dalam file CSV
+    """
+
     with open('users.csv', 'a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([name, id])
 
 def generate_id() -> str:
+    """
+    Menghasilkan ID unik untuk pengguna baru
+    """
+
     return str(random.randint(1000, 9999))
 
 def write_log(message: str) -> None:
+    """
+    Menulis log chat room dengan timestamp ke dalam file .txt
+    """
+
     log_file = "log_server.txt"
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     log_message = f"[{timestamp}] {message}\n"
@@ -35,6 +51,10 @@ def write_log(message: str) -> None:
         file.write(log_message)
 
 def write_encrypted_log(encrypted_message: str) -> None:
+    """
+    Menulis log pesan terenkripsi dengan timestamp
+    """
+
     log_file = "log_encrypted.txt"
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     log_message = f"[{timestamp}] {encrypted_message}\n"
@@ -43,9 +63,17 @@ def write_encrypted_log(encrypted_message: str) -> None:
         file.write(log_message)
 
 def generate_password(length: int = 6) -> str:
+    """
+    Menghasilkan password untuk bergabung dengan chat room
+    """
+
     return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 
 def broadcast(message: str, sender_addr: tuple = None) -> None:
+    """
+    Mengirimkan pesan ke semua client kecuali pengirim
+    """
+
     for client in clients:
         if client != sender_addr:
             s.sendto(message.encode('utf-8'), client)
@@ -55,6 +83,10 @@ def broadcast(message: str, sender_addr: tuple = None) -> None:
             
 
 def RunServer() -> None:
+    """
+    Menjalankan server UDP
+    """
+    
     host = '127.0.0.1'
     port = 9999
     

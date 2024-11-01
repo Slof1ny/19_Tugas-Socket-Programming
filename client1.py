@@ -4,6 +4,10 @@ import rsa_cipher
 from rsa_cipher import encrypt, decrypt
 
 def ReceiveData(sock: socket.socket, private_key: tuple) -> None:
+    """
+    Menerima data dari socket dan melakukan dekripsi pesan dengan private key
+    """
+
     while True:
         try:
             data, addr = sock.recvfrom(1024)
@@ -20,6 +24,10 @@ def ReceiveData(sock: socket.socket, private_key: tuple) -> None:
             break
 
 def Authenticate(sock: socket.socket, server: tuple) -> str:
+    """
+    Melakukan otentikasi pengguna dan memberikan akses ke chatroom serta public key jika berhasil
+    """
+
     public_key = None
     while True:
         password = input("Password: ")
@@ -29,15 +37,14 @@ def Authenticate(sock: socket.socket, server: tuple) -> str:
         print(response)
 
         if response.startswith("(") and response.endswith(")"):
-            # Attempt to parse the tuple from the string
+            # Parsing tuple dari string
             try:
-                public_key_str = response.strip("()")  # Remove the parentheses
+                public_key_str = response.strip("()")
                 e, n = map(int, public_key_str.split(","))
                 public_key = (e, n)
             except ValueError:
                 public_key = None
         if isinstance(public_key, tuple):
-            print(f"Public key received: {public_key}")
             break
         elif response == "Incorrect password. Try again.":
             print("Incorrect password. Please try again.")
@@ -72,7 +79,7 @@ def Authenticate(sock: socket.socket, server: tuple) -> str:
                 print(response)
 
             if "Welcome" in response or "successful" in response:
-                return f"Logged in successfull, welcome {name}."
+                return f"Logged in successfull, welcome {name}. Public key is {public_key}"
             else:
                 print("Authentication failed. Please try again.")
         else:
@@ -80,9 +87,13 @@ def Authenticate(sock: socket.socket, server: tuple) -> str:
             return False
 
 def RunClient() -> None:
+    """
+    Mencoba koneksi ke server, melakukan otentikasi dan bisa mulai mengirim/menerima pesan
+    """
+
     while True:
         try:
-            server_ip = input("Server IP (use '127.0.0.1' for localhost): ")
+            server_ip = input("Server IP: ")
             server_port = input("Server Port: ")
             
             # Validasi input port
@@ -121,7 +132,7 @@ def RunClient() -> None:
         s.close()
         return
 
-    public_key_str = auth_response.split("public key is ")[1]
+    public_key_str = auth_response.split("Public key is ")[1]
     e, n = map(int, public_key_str.strip("()").split(", "))
     public_key = (e, n)
 
