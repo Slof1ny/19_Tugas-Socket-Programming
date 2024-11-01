@@ -46,8 +46,13 @@ def Authenticate(sock: socket.socket, server: tuple) -> str:
             return False
     
     while True:
-        action = input("Enter 'register' or 'login': ").lower()
-        sock.sendto(action.encode('utf-8'), server)
+        while True:
+            action = input("Enter 'register' or 'login': ").lower()
+            if action in ['register', 'login']:
+                sock.sendto(action.encode('utf-8'), server)
+                break
+            else:
+                print("Invalid command. Please enter 'register' or 'login'.")
         response, _ = sock.recvfrom(1024)
         response = response.decode('utf-8')
         print(response)
@@ -67,7 +72,7 @@ def Authenticate(sock: socket.socket, server: tuple) -> str:
                 print(response)
 
             if "Welcome" in response or "successful" in response:
-                return f"Logged in successfull, welcome {name}. public key is {public_key}"
+                return f"Logged in successfull, welcome {name}."
             else:
                 print("Authentication failed. Please try again.")
         else:
@@ -82,7 +87,7 @@ def RunClient() -> None:
             
             # Validasi input port
             if not server_port.isdigit():
-                raise ValueError("Port harus berupa angka.")
+                raise ValueError("Port must be a number.")
             server_port = int(server_port)
             
             server = (server_ip, server_port)
@@ -97,19 +102,19 @@ def RunClient() -> None:
             s.recvfrom(1024)
             s.settimeout(None)  # Reset timeout
             
-            print("Berhasil terhubung ke server.")
+            print("Connected to server.")
             break  # Keluar dari loop jika koneksi berhasil
         
         except socket.gaierror:
-            print("Error: Alamat IP tidak valid. Silakan coba lagi.")
+            print("Error: Invalid server IP. please try again.")
         except ValueError as ve:
             print(f"Error: {ve}")
         except socket.timeout:
-            print("Error: Tidak dapat terhubung ke server. Pastikan alamat dan port benar.")
+            print("Error: can't connect to server. Please try again.")
         except Exception as e:
-            print(f"Terjadi kesalahan: {e}")
+            print(f"Error {e}")
         
-        print("Silakan coba lagi.\n")
+        print("Please Try Again\n")
     
     auth_response = Authenticate(s, server)
     if not auth_response:
