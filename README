@@ -1,6 +1,14 @@
+Aplikasi chatroom sederhana yang memanfaatkan protokol UDP ini dibuat sebagai pemenuhan tugas
+mata kuliah Jaringan Komputer (II2120)
+
+Dibuat Oleh:
+Mudzaki Kaarzaqiel Hakim / 18223024
+Henrycus Hugatatama Risaldy / 18223008
+
 Berikut adalah tata cara menjalankan program:
-1. Pada terminal, pastikan directory sudah sesuai dengan lokasi file "client.py" dan "server.py"
-2. Jalankan command:   python3 ./server.py
-3. Jika menggunakan 1 device, pada terminal baru dengan directory yang sama, jalankan command: python3 ./client.py
-4. Jika menggunakan device lain, buka terminal dan jalankan command: python ./client.py
-5. Pastikan bahwa directory sudah sesuai sebelum menjalankan command
+1. Pada terminal, pastikan directory sudah sesuai
+2. Ganti host dari 'localhost' menjadi ip address dari device yang digunakan sebagai server
+3. Pada device yang ingin digunakan sebagai server, jalankan command:   python3 ./server1.py
+4. Pada device yang ingin digunakan sebagai client, jalankan command: python3 ./client1.py
+5. Pastikan jaringan yang digunakan memadai, karena berpengaruh terhadap kecepatan dan keberhasilan pengiriman pesan
+6. Selamat mencoba.
